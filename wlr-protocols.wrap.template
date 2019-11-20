@@ -1,0 +1,9 @@
+[wrap-file]
+directory = wlr-protocols-${WLR_PROTOCOLS_COMMIT}
+source_url = https://github.com/swaywm/wlr-protocols/archive/${WLR_PROTOCOLS_COMMIT}.tar.gz
+source_filename = wlr-protocols-${WLR_PROTOCOLS_COMMIT}.tar.gz
+source_hash = ${WLR_PROTOCOLS_HASH}
+
+patch_url = https://github.com/francma/wlr-protocols-meson-wrap/releases/download/wlr-protocols-${WLR_PROTOCOLS_COMMIT}/wlr-protocols-${WLR_PROTOCOLS_COMMIT}-wrap.tar.gz
+patch_filename = wlr-protocols-wrap.tar.gz
+patch_hash = ${PATCH_HASH}

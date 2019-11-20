@@ -1,0 +1,28 @@
+os: linux 
+arch: arm64 
+dist: bionic
+language: shell
+
+script:
+  - mv wlr-protocols ${TRAVIS_BRANCH}
+  - tar czf ${TRAVIS_BRANCH}-wrap.tar.gz ${TRAVIS_BRANCH}
+  - export WLR_PROTOCOLS_COMMIT=$(echo ${TRAVIS_BRANCH} | sed 's/wlr-protocols-//')
+  - wget "https://github.com/swaywm/wlr-protocols/archive/${WLR_PROTOCOLS_COMMIT}.tar.gz"
+  - export WLR_PROTOCOLS_HASH=$(sha256sum "${WLR_PROTOCOLS_COMMIT}.tar.gz" | awk '{print $1}')
+  - export PATCH_HASH=$(sha256sum "${TRAVIS_BRANCH}-wrap.tar.gz" | awk '{print $1}')
+  - cat wlr-protocols.wrap.template | envsubst > wlr-protocols.wrap  
+
+deploy:
+  name: "wlr-protocols ${WLR_PROTOCOLS_COMMIT}"
+  provider: releases
+  api_key:
+    secure: JtTbqvSIT2Cu7VBfXhKHzkCYX1MkZpAF+tJDCmxvlM0PRHJxnwqylqh3F6UmDYw9LfVNfaxJtxeSHLEtMK0QB9mzSIzvC2iK6GkinP4uuNs34Dd9OYHa4TrfF3WU5v4f7W7GGPqhj8StcJHCzt3cFkH5HjXLV+/D8rPsiF5mCA/mydlDcl0zJQXQY5Ng75rbCXC2IVnik+TCQG8T4QmZwkJYUlDSOtlil7vU3Yj2AUiBJR0yjYGNpLcjKiqnJDPuji39kGtoL7lsr3dOhk7iW+34D03kR0f5EANtWfrvMZYNB9+aBqJp0MORI83iRQBy5T2Oeqhg8w9paktBgDzyQAv+r+IV51GlJFoGP9rdrZuHoishnxmBBxxs2qCkI66ffdoqlS5cBVA8Ufkl9dsEzafi14Ppc/rTetvGMPQ0LKRGxQcy+ZvYpECHd5cOxpksnAyqzFgNkcD+E53RSfVz75bClgQ0LD23383I96DeX25Y6J2dsrPYvilwaU3zfuSPgBIomq5ZmepGRU4QzNyqXIP6kO8M8Xok2UDnrESOeHqHqLweSWz7ZgLRwlArx9jBOF4rfosHHX/HVq/GWrB6dhJgE/zPZb53buwW5VXcOly3hS7nnyu7WajCa2nBYMTrPOm3msDt66GfQK8CUPHZbfN/Ep+lQAa6tE8sYv2Wd9g=
+  file:
+    - "${TRAVIS_BRANCH}-wrap.tar.gz"
+    - "wlr-protocols.wrap"
+  skip_cleanup: true
+  overwrite: true
+  on:
+    tags: true
+
+
